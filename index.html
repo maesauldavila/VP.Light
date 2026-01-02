@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AIDN Viewer.Light - Visualizador de presentaciones interactivo">
+<title>AIDN - VP.Light</title>
+<style>
+:root {
+  --primary: #0c2a85;
+  --secondary: #03b4d6;
+  --bg-gradient-start: #0c2a85;
+  --bg-gradient-end: #03b4d6;
+  --header-bg: rgba(255, 255, 255, .95);
+  --sidebar-bg: rgba(255, 255, 255, .95);
+  --presentation-bg: white;
+  --controls-bg: rgba(255, 255, 255, .95);
+  --text-primary: #0c2a85;
+  --text-secondary: #666;
+  --border-color: #e0e0e0;
+  --upload-bg: #f8f9fa;
+  --shadow: rgba(0, 0, 0, .1);
+  --hover-shadow: rgba(0, 0, 0, .2);
+  --overlay-bg: rgba(0, 0, 0, .9);
+  --media-player-bg: white;
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+[data-theme="dark"] {
+  --primary: #03b4d6;
+  --secondary: #0c2a85;
+  --bg-gradient-start: #0a0e1a;
+  --bg-gradient-end: #1a2540;
+  --header-bg: rgba(26, 31, 53, .95);
+  --sidebar-bg: rgba(26, 31, 53, .95);
+  --presentation-bg: #1a1f35;
+  --controls-bg: rgba(26, 31, 53, .95);
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --border-color: #2d3748;
+  --upload-bg: #0f1629;
+  --shadow: rgba(0, 0, 0, .4);
+  --hover-shadow: rgba(3, 180, 214, .3);
+  --overlay-bg: rgba(10, 14, 26, .95);
+  --media-player-bg: #1a1f35;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+  transition: background var(--transition-slow), color var(--transition-base);
+}
+
+.header {
+  background: var(--header-bg);
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 10px var(--shadow);
+  position: relative;
+  z-index: 1000;
+  transition: background var(--transition-base), box-shadow var(--transition-base);
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  transition: transform var(--transition-base);
+}
+
+.logo:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+.logo path,
+.logo circle {
+  transition: fill var(--transition-base), stroke var(--transition-base);
+}
+
+.brand-text h1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+.brand-text h2 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color var(--transition-base);
+}
+
+.tagline {
+  font-size: 14px;
+  color: var(--secondary);
+  font-style: italic;
+  font-weight: 500;
+  margin-top: 4px;
+  transition: color var(--transition-base);
+}
+
+.main-container {
+  display: flex;
+  height: calc(100vh - 90px);
+  transition: all var(--transition-base) cubic-bezier(.4, 0, .2, 1);
+}
+
+.main-container.sidebar-hidden .presentation-area {
+  margin-right: 20px;
+}
+
+.sidebar {
+  width: 300px;
+  background: var(--sidebar-bg);
+  margin: 20px 20px 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all var(--transition-base) cubic-bezier(.4, 0, .2, 1);
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.sidebar.hidden {
+  width: 0;
+  margin-right: 0;
+  margin-left: 0;
+  border: none;
+  box-shadow: none;
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-content {
+  opacity: 1;
+  transition: opacity .2s ease .1s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 300px;
+}
+
+.sidebar.hidden .sidebar-content {
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+.sidebar:not(.hidden) {
+  animation: slideInFromRight var(--transition-base) cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.presentation-area {
+  flex: 1;
+  background: var(--presentation-bg);
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0 8px 32px var(--shadow);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .2s ease, background var(--transition-base), box-shadow var(--transition-base);
+}
+
+.presentation-area:hover {
+  transform: translateX(-2px);
+}
+
+.main-container.sidebar-hidden .presentation-area:hover {
+  transform: translateX(0);
+}
+
+.presentation-area:-webkit-full-screen,
+.presentation-area:-moz-full-screen,
+.presentation-area:fullscreen {
+  border-radius: 0;
+  margin: 0;
+}
+
+.viewer-container {
+  flex: 1;
+  position: relative;
+  background: var(--upload-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-base);
+}
+
+.presentation-content {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: var(--presentation-bg);
+  transition: background var(--transition-base);
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 40px;
+  transition: color var(--transition-base);
+}
+
+.upload-area.dragover {
+  background: rgba(3, 180, 214, .1);
+  border: 2px dashed #03b4d6;
+}
+
+.controls {
+  background: var(--controls-bg);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  transition: background var(--transition-base), border-color var(--transition-base);
+  gap: 10px;
+}
+
+.control-btn,
+.fullscreen-control-btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  background: var(--primary);
+  color: white;
+}
+
+.control-btn:hover {
+  background: var(--secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px var(--hover-shadow);
+}
+
+.control-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.control-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-info,
+.fullscreen-page-info {
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color var(--transition-base);
+  font-size: 14px;
+  flex: 1;
+  text-align: center;
+}
+
+.fullscreen-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--overlay-bg);
+  color: white;
+  padding: 15px 20px;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1004;
+  opacity: 0;
+  transition: opacity var(--transition-base), background var(--transition-base);
+  gap: 10px;
+}
+
+.presentation-area:fullscreen .fullscreen-controls {
+  display: flex;
+}
+
+.presentation-area:fullscreen .fullscreen-controls.show {
+  opacity: 1;
+}
+
+.presentation-area:fullscreen .controls {
+  display: none;
+}
+
+.fullscreen-control-btn {
+  background: rgba(255, 255, 255, .2);
+  color: white;
+}
+
+.fullscreen-control-btn:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.fullscreen-control-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.fullscreen-page-info {
+  color: white;
+  font-weight: 500;
+}
+
+.media-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-bg);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1002;
+  transition: background var(--transition-base);
+}
+
+.media-overlay.show {
+  display: flex;
+}
+
+.media-player {
+  max-width: 90%;
+  max-height: 90%;
+  background: var(--media-player-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background var(--transition-base);
+}
+
+.media-player video,
+.media-player audio {
+  width: 100%;
+  height: auto;
+}
+
+.media-player iframe {
+  width: 1200px;
+  height: 800px;
+  border: none;
+}
+
+.ghost-btn {
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  background: rgba(12, 42, 133, .8);
+  backdrop-filter: blur(10px);
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.ghost-btn:hover {
+  background: #03b4d6;
+  transform: scale(1.1);
+  box-shadow: 0 5px 20px rgba(3, 180, 214, .4);
+}
+
+.ghost-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--transition-base);
+}
+
+.close-media {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: #03b4d6;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
+  transition: all var(--transition-base);
+}
+
+.close-media:hover {
+  background: #0c2a85;
+  transform: scale(1.1);
+}
+
+.close-media svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  stroke-width: 2.5;
+}
+
+.toggle-menu {
+  position: absolute;
+  top: 20px;
+  right: 70px;
+  z-index: 999;
+  transition: all var(--transition-base) cubic-bezier(.4, 0, .2, 1);
+}
+
+.toggle-menu:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+.sidebar.hidden ~ .presentation-area .toggle-menu {
+  transform: rotate(180deg);
+}
+
+.sidebar.hidden ~ .presentation-area .toggle-menu:hover {
+  transform: scale(1.1) rotate(270deg);
+}
+
+.toggle-menu.pulse {
+  animation: pulse-subtle 2s infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(3, 180, 214, .4);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(3, 180, 214, .1);
+  }
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.presentation-area:fullscreen .toggle-menu,
+.presentation-area:fullscreen .fullscreen-btn {
+  background: rgba(0, 0, 0, .6);
+}
+
+.sidebar h3 {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 20px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--transition-base);
+}
+
+.sidebar h3::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .2), transparent);
+  transition: left .5s ease;
+}
+
+.sidebar:hover h3::after {
+  left: 100%;
+}
+
+.media-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--upload-bg);
+}
+
+.media-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.media-list::-webkit-scrollbar-track {
+  background: var(--upload-bg);
+  border-radius: 3px;
+  transition: background var(--transition-base);
+}
+
+.media-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--secondary), var(--primary));
+  border-radius: 3px;
+  transition: background var(--transition-base);
+}
+
+.media-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+}
+
+.add-media {
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  transition: border-color var(--transition-base);
+}
+
+.add-btn {
+  background: var(--secondary);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all var(--transition-base);
+}
+
+.add-btn:hover {
+  background: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--hover-shadow);
+}
+
+.status-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--sidebar-bg);
+  padding: 20px 30px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 5px 20px var(--shadow);
+  display: none;
+  z-index: 10000;
+  transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base);
+  border: 1px solid var(--border-color);
+}
+
+.status-message.show {
+  display: block;
+  animation: fadeInScale .3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.media-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all .2s cubic-bezier(.4, 0, .2, 1);
+  font-size: 14px;
+  transform: translateX(0);
+  color: var(--text-primary);
+}
+
+.media-item:hover {
+  background: rgba(3, 180, 214, .1);
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.media-icon {
+  width: 20px;
+  height: 20px;
+  background: var(--secondary);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  transition: background var(--transition-base);
+}
+
+.svg-button {
+  width: 140px;
+  height: 140px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 3px dashed transparent;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--upload-bg);
+}
+
+.svg-button:hover {
+  transform: scale(1.05);
+  background-color: rgba(3, 180, 214, .05);
+}
+
+.svg-button.drag-over {
+  border-color: #03b4d6;
+  background-color: rgba(3, 180, 214, .1);
+  transform: scale(1.05);
+}
+
+.svg-button.clicked {
+  animation: pulse .3s ease;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.svg-button path,
+.svg-button rect,
+.svg-button circle {
+  transition: stroke var(--transition-base), fill var(--transition-base);
+}
+
+[data-theme="dark"] .svg-button path:nth-child(2),
+[data-theme="dark"] .svg-button path:nth-child(3) {
+  stroke: var(--secondary);
+}
+
+[data-theme="dark"] .svg-button rect {
+  stroke: var(--primary);
+}
+
+[data-theme="dark"] .svg-button circle {
+  fill: var(--secondary);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.custom-tooltip {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 10001;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  white-space: nowrap;
+}
+
+.custom-tooltip.show {
+  opacity: 1;
+}
+
+.user-idle .ghost-btn {
+  opacity: 0.7;
+}
+
+.low-battery *,
+.low-battery *::before,
+.low-battery *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 12px 15px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .brand-text h1 {
+    font-size: 24px;
+  }
+
+  .brand-text h2 {
+    font-size: 14px;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+
+  .sidebar-content {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin: 0 20px 20px 20px;
+    height: 200px;
+    transform: translateY(0);
+  }
+
+  .sidebar.hidden {
+    height: 0;
+    margin-bottom: 0;
+    transform: translateY(-100%);
+  }
+
+  .sidebar-content {
+    min-width: 100%;
+  }
+
+  .sidebar:not(.hidden) {
+    animation: slideInFromTop var(--transition-base) cubic-bezier(.4, 0, .2, 1);
+  }
+
+  @keyframes slideInFromTop {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .presentation-area {
+    margin: 0 20px 20px 20px;
+  }
+
+  .toggle-menu {
+    right: 70px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .brand-text h1 {
+    font-size: 22px;
+  }
+
+  .brand-text h2 {
+    font-size: 13px;
+  }
+
+  .tagline {
+    font-size: 12px;
+  }
+
+  .control-btn,
+  .fullscreen-control-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .page-info,
+  .fullscreen-page-info {
+    font-size: 12px;
+  }
+
+  .ghost-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .close-media {
+    width: 56px;
+    height: 56px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body data-theme="light">
+<a href="#presentationArea" class="skip-link" aria-label="Saltar navegación e ir al contenido principal">Saltar al contenido principal</a>
+
+<div class="header">
+  <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Logo AIDN">
+    <defs>
+      <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#0c2a85;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#03b4d6;stop-opacity:1"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 5L85 25V75L50 95L15 75V25L50 5Z" fill="url(#logoGrad)"/>
+    <path d="M50 15L75 30V70L50 85L25 70V30L50 15Z" fill="#fff"/>
+    <path d="M35 65C38 53.75 42 37.75 50 33.25C58 37.75 62 53.75 65 65M42 58Q50 56.5 58 58" fill="none" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="68" cy="42" fill="url(#logoGrad)" r="3"/>
+  </svg>
+  <div class="brand-text">
+    <h1>AIDN</h1>
+    <h2>Servicios de administración</h2>
+    <div class="tagline">Catapultando empresas para liderar el cambio</div>
+  </div>
+</div>
+
+<div class="main-container sidebar-hidden" id="mainContainer">
+  <div class="presentation-area" id="presentationArea">
+    <button class="fullscreen-btn ghost-btn" onclick="toggleFullscreen()" title="Pantalla completa" aria-label="Activar o desactivar pantalla completa">
+      <svg viewBox="0 0 24 24" id="fullscreenIcon">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
+
+    <button class="toggle-menu ghost-btn pulse" onclick="toggleSidebar()" title="Alternar menú lateral" aria-label="Mostrar u ocultar menú de medios complementarios" aria-expanded="false">
+      <svg viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="viewer-container" id="viewerContainer">
+      <div class="upload-area" id="uploadArea">
+        <svg class="svg-button" id="svgButton" viewBox="0 0 100 100" fill="none" role="img" aria-label="Área de carga de archivos">
+          <rect x="20" y="25" width="60" height="50" fill="none" stroke="#0c2a85" stroke-width="3" rx="4"/>
+          <path d="M30 45L40 35L50 45L65 30L75 40" stroke="#03b4d6" stroke-width="3" fill="none"/>
+          <circle cx="35" cy="35" r="3" fill="#03b4d6"/>
+          <path d="M50 15L45 10L50 5L55 10L50 15ZM50 10V25" stroke="#0c2a85" stroke-width="3" fill="none"/>
+        </svg>
+        <input type="file" id="mainFileInput" accept=".pdf,.html,.htm,.jpg,.jpeg,.png,.gif,.webp" multiple style="display:none" aria-label="Seleccionar archivos de presentación">
+      </div>
+      <iframe class="presentation-content" id="presentationFrame" style="display:none" title="Visor de presentación - Contenido de la diapositiva actual" aria-label="Contenido de la presentación cargada"></iframe>
+    </div>
+
+    <div class="controls" role="toolbar" aria-label="Controles de navegación">
+      <button class="control-btn" id="prevBtn" onclick="previousPage()" disabled aria-label="Ir a la diapositiva anterior" aria-disabled="true">
+        <svg viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Anterior</span>
+      </button>
+      <div class="page-info" id="pageInfo" role="status" aria-live="polite">Carga una presentación</div>
+      <button class="control-btn" id="nextBtn" onclick="nextPage()" disabled aria-label="Ir a la diapositiva siguiente" aria-disabled="true">
+        <span>Siguiente</span>
+        <svg viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="fullscreen-controls" id="fullscreenControls" role="toolbar" aria-label="Controles de navegación en pantalla completa">
+      <button class="fullscreen-control-btn" id="fullscreenPrevBtn" onclick="previousPage()" disabled aria-label="Ir a la diapositiva anterior" aria-disabled="true">
+        <svg viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Anterior</span>
+      </button>
+      <div class="fullscreen-page-info" id="fullscreenPageInfo" role="status" aria-live="polite">Carga una presentación</div>
+      <button class="fullscreen-control-btn" id="fullscreenNextBtn" onclick="nextPage()" disabled aria-label="Ir a la diapositiva siguiente" aria-disabled="true">
+        <span>Siguiente</span>
+        <svg viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <aside class="sidebar hidden" id="sidebar" role="complementary" aria-label="Menú de medios complementarios">
+    <div class="sidebar-content">
+      <h3>Medios</h3>
+      <div class="media-list" id="mediaList" role="list" aria-label="Lista de archivos multimedia">
+        <p style="color:var(--text-secondary);text-align:center;margin-top:40px">No hay archivos complementarios cargados</p>
+      </div>
+      <div class="add-media" role="group" aria-label="Botones para agregar medios">
+        <button class="add-btn" onclick="document.getElementById('videoInput').click()" aria-label="Agregar archivo de video">+ Video</button>
+        <button class="add-btn" onclick="document.getElementById('audioInput').click()" aria-label="Agregar archivo de audio">+ Audio</button>
+        <button class="add-btn" onclick="addWebLink()" aria-label="Agregar enlace web">+ Web</button>
+        <input type="file" id="videoInput" accept="video/*" style="display:none" onchange="addMediaFile(this.files[0],'video')" aria-label="Seleccionar archivo de video">
+        <input type="file" id="audioInput" accept="audio/*" style="display:none" onchange="addMediaFile(this.files[0],'audio')" aria-label="Seleccionar archivo de audio">
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="media-overlay" id="mediaOverlay" role="dialog" aria-label="Reproductor de medios" aria-modal="true">
+  <div class="media-player" id="mediaPlayer"></div>
+  <button class="close-media" onclick="closeMedia()" aria-label="Cerrar reproductor de medios" title="Cerrar reproductor">
+    <svg viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+</div>
+
+<div class="status-message" id="statusMessage" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+'use strict';
+const state = {
+  presentation: {
+    currentPage: 1,
+    totalPages: 1,
+    loaded: false,
+    files: []
+  },
+  media: {
+    files: [],
+    current: null,
+    currentElement: null
+  },
+  ui: {
+    sidebarVisible: false,
+    isFullscreen: false,
+    fullscreenControlsTimeout: null
+  }
+};
+
+const els = {
+  uploadArea: document.getElementById('uploadArea'),
+  svgButton: document.getElementById('svgButton'),
+  fileInput: document.getElementById('mainFileInput'),
+  frame: document.getElementById('presentationFrame'),
+  statusMsg: document.getElementById('statusMessage'),
+  sidebar: document.getElementById('sidebar'),
+  mainContainer: document.getElementById('mainContainer'),
+  toggleBtn: document.querySelector('.toggle-menu'),
+  overlay: document.getElementById('mediaOverlay'),
+  player: document.getElementById('mediaPlayer'),
+  mediaList: document.getElementById('mediaList'),
+  pageInfo: document.getElementById('pageInfo'),
+  prevBtn: document.getElementById('prevBtn'),
+  nextBtn: document.getElementById('nextBtn'),
+  presentationArea: document.getElementById('presentationArea'),
+  fullscreenIcon: document.getElementById('fullscreenIcon'),
+  fullscreenControls: document.getElementById('fullscreenControls'),
+  fullscreenPageInfo: document.getElementById('fullscreenPageInfo'),
+  fullscreenPrevBtn: document.getElementById('fullscreenPrevBtn'),
+  fullscreenNextBtn: document.getElementById('fullscreenNextBtn')
+};
+
+function detectSystemTheme() {
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  } catch (e) {
+    return 'light';
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('vp_light_theme');
+  let theme = savedTheme;
+  if (!theme) {
+    try {
+      theme = detectSystemTheme();
+    } catch (e) {
+      theme = 'light';
+    }
+  }
+  document.body.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.body.setAttribute('data-theme', newTheme);
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('vp_light_theme', newTheme);
+  showMessage(`Tema ${newTheme === 'dark' ? 'oscuro' : 'claro'} activado`);
+}
+
+initTheme();
+
+if (window.matchMedia) {
+  try {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (!localStorage.getItem('vp_light_theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+      }
+    });
+  } catch (e) {
+    console.warn('Theme listener error:', e);
+  }
+}
+
+function validateFile(file, type = 'presentation') {
+  if (!file || !(file instanceof File)) {
+    return { valid: false, error: 'Archivo no válido' };
+  }
+
+  const MAX_SIZE = {
+    presentation: 50 * 1024 * 1024,
+    image: 50 * 1024 * 1024,
+    audio: 100 * 1024 * 1024,
+    video: Infinity
+  };
+
+  const ALLOWED_TYPES = {
+    presentation: [
+      'application/pdf',
+      'text/html',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif',
+      'image/webp'
+    ],
+    video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'],
+    audio: ['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm', 'audio/mp3'],
+    image: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+  };
+
+  const maxSize = MAX_SIZE[type] || MAX_SIZE.presentation;
+  const allowedTypes = ALLOWED_TYPES[type] || ALLOWED_TYPES.presentation;
+
+  if (file.size > maxSize && maxSize !== Infinity) {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+    const maxMB = (maxSize / 1024 / 1024).toFixed(0);
+    return { 
+      valid: false, 
+      error: `Archivo muy grande: ${sizeMB} MB. Máximo permitido: ${maxMB} MB` 
+    };
+  }
+
+  const fileType = file.type.toLowerCase();
+  const fileName = file.name.toLowerCase();
+  
+  const isValidType = allowedTypes.some(allowed => fileType.includes(allowed)) ||
+    (type === 'presentation' && (fileName.endsWith('.html') || fileName.endsWith('.htm')));
+
+  if (!isValidType) {
+    return { 
+      valid: false, 
+      error: `Tipo de archivo no permitido: ${file.type || 'desconocido'}` 
+    };
+  }
+
+  return { valid: true, error: null };
+}
+
+const handlers = {
+  dragOver: e => {
+    e.preventDefault();
+    els.uploadArea.classList.add('dragover');
+    els.svgButton.classList.add('drag-over');
+  },
+  dragLeave: () => {
+    els.uploadArea.classList.remove('dragover');
+    els.svgButton.classList.remove('drag-over');
+  },
+  drop: e => {
+    e.preventDefault();
+    els.uploadArea.classList.remove('dragover');
+    els.svgButton.classList.remove('drag-over');
+    loadMainFiles(e.dataTransfer.files);
+  },
+  svgClick: () => {
+    els.svgButton.classList.add('clicked');
+    setTimeout(() => els.svgButton.classList.remove('clicked'), 300);
+    els.fileInput.click();
+  },
+  fileChange: e => {
+    loadMainFiles(e.target.files);
+    els.fileInput.value = '';
+  }
+};
+
+[els.uploadArea, els.svgButton].forEach(element => {
+  if (element) {
+    element.addEventListener('dragover', handlers.dragOver);
+    element.addEventListener('dragleave', handlers.dragLeave);
+    element.addEventListener('drop', handlers.drop);
+  }
+});
+
+if (els.svgButton) els.svgButton.addEventListener('click', handlers.svgClick);
+if (els.fileInput) els.fileInput.addEventListener('change', handlers.fileChange);
+
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+  state.ui.isFullscreen = !!(
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement
+  );
+
+  if (els.fullscreenIcon) {
+    els.fullscreenIcon.innerHTML = state.ui.isFullscreen
+      ? '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>'
+      : '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+  }
+
+  const fullscreenBtn = document.querySelector('.fullscreen-btn');
+  if (fullscreenBtn) {
+    fullscreenBtn.setAttribute('title', state.ui.isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa');
+    fullscreenBtn.setAttribute('aria-label', state.ui.isFullscreen ? 'Salir de pantalla completa' : 'Activar pantalla completa');
+  }
+
+  if (state.ui.isFullscreen) {
+    setupFullscreenControls();
+  }
+
+  showMessage(state.ui.isFullscreen ? 'Modo pantalla completa activado' : 'Modo pantalla completa desactivado');
+}
+
+function toggleFullscreen() {
+  if (!els.presentationArea) return;
+
+  try {
+    if (!state.ui.isFullscreen) {
+      if (els.presentationArea.requestFullscreen) {
+        els.presentationArea.requestFullscreen();
+      } else if (els.presentationArea.webkitRequestFullscreen) {
+        els.presentationArea.webkitRequestFullscreen();
+      } else if (els.presentationArea.mozRequestFullScreen) {
+        els.presentationArea.mozRequestFullScreen();
+      } else if (els.presentationArea.msRequestFullscreen) {
+        els.presentationArea.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  } catch (e) {
+    console.error('Fullscreen error:', e);
+    showMessage('Error al cambiar modo de pantalla');
+  }
+}
+
+function setupFullscreenControls() {
+  const controls = els.fullscreenControls;
+  if (!controls) return;
+
+  const showControls = () => {
+    controls.classList.add('show');
+    clearTimeout(state.ui.fullscreenControlsTimeout);
+    state.ui.fullscreenControlsTimeout = setTimeout(() => controls.classList.remove('show'), 3000);
+  };
+
+  const hideControls = () => {
+    clearTimeout(state.ui.fullscreenControlsTimeout);
+    state.ui.fullscreenControlsTimeout = setTimeout(() => controls.classList.remove('show'), 1000);
+  };
+
+  els.presentationArea.addEventListener('mousemove', showControls);
+  els.presentationArea.addEventListener('mouseleave', hideControls);
+  updateFullscreenControls();
+}
+
+function updateFullscreenControls() {
+  const pageText = els.pageInfo.textContent;
+  if (els.fullscreenPageInfo) {
+    els.fullscreenPageInfo.textContent = pageText;
+  }
+
+  if (els.fullscreenPrevBtn) {
+    els.fullscreenPrevBtn.disabled = els.prevBtn.disabled;
+    els.fullscreenPrevBtn.setAttribute('aria-disabled', els.prevBtn.disabled.toString());
+  }
+
+  if (els.fullscreenNextBtn) {
+    els.fullscreenNextBtn.disabled = els.nextBtn.disabled;
+    els.fullscreenNextBtn.setAttribute('aria-disabled', els.nextBtn.disabled.toString());
+  }
+}
+
+function loadMainFiles(files) {
+  if (!files || files.length === 0) return;
+
+  showMessage('Cargando presentación...');
+
+  const validFiles = [];
+  const errors = [];
+
+  Array.from(files).forEach(file => {
+    const validation = validateFile(file, 'presentation');
+    if (validation.valid) {
+      validFiles.push(file);
+    } else {
+      errors.push(`${file.name}: ${validation.error}`);
+    }
+  });
+
+  if (errors.length > 0) {
+    showMessage(`Archivos rechazados: ${errors.join(', ')}`);
+    if (validFiles.length === 0) return;
+  }
+
+  state.presentation.files = validFiles
+    .filter(file =>
+      file.type === 'application/pdf' ||
+      file.type === 'text/html' ||
+      file.name.endsWith('.html') ||
+      file.name.endsWith('.htm') ||
+      file.type.startsWith('image/')
+    )
+    .map(file => ({
+      file: file,
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file)
+    }));
+
+  if (state.presentation.files.length === 0) {
+    showMessage('No se encontraron archivos de presentación válidos');
+    return;
+  }
+
+  state.presentation.totalPages = state.presentation.files.length;
+  state.presentation.currentPage = 1;
+  loadPresentationPage(0);
+  
+  if (els.uploadArea) els.uploadArea.style.display = 'none';
+  if (els.frame) els.frame.style.display = 'block';
+  
+  state.presentation.loaded = true;
+  hideMessage();
+}
+
+function loadPresentationPage(index) {
+  if (index < 0 || index >= state.presentation.files.length) return;
+
+  const fileData = state.presentation.files[index];
+
+  try {
+    if (fileData.type === 'application/pdf') {
+      els.frame.src = fileData.url;
+    } else if (fileData.type === 'text/html' || fileData.name.endsWith('.html') || fileData.name.endsWith('.htm')) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          els.frame.srcdoc = e.target.result;
+        } catch (err) {
+          console.error('Error loading HTML:', err);
+          showMessage('Error al cargar archivo HTML');
+        }
+      };
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error);
+        showMessage(`Error al leer archivo: ${error.type || 'desconocido'}`);
+      };
+      reader.readAsText(fileData.file);
+    } else if (fileData.type.startsWith('image/')) {
+      els.frame.srcdoc = `
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body {
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background: #f5f5f5;
+              }
+              img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${fileData.url}" alt="${fileData.name}" loading="lazy">
+          </body>
+        </html>
+      `;
+    }
+
+    setupPresentationControls();
+  } catch (e) {
+    console.error('Error loading presentation:', e);
+    showMessage('Error al cargar la presentación');
+  }
+}
+
+function setupPresentationControls() {
+  const currentFile = state.presentation.files[state.presentation.currentPage - 1];
+  
+  if (els.pageInfo) {
+    els.pageInfo.textContent = `${currentFile.name} - Archivo ${state.presentation.currentPage} de ${state.presentation.totalPages}`;
+  }
+
+  if (els.prevBtn) {
+    els.prevBtn.disabled = state.presentation.currentPage <= 1;
+    els.prevBtn.setAttribute('aria-disabled', (state.presentation.currentPage <= 1).toString());
+  }
+
+  if (els.nextBtn) {
+    els.nextBtn.disabled = state.presentation.currentPage >= state.presentation.totalPages;
+    els.nextBtn.setAttribute('aria-disabled', (state.presentation.currentPage >= state.presentation.totalPages).toString());
+  }
+
+  updateFullscreenControls();
+}
+
+const previousPage = () => {
+  if (state.presentation.currentPage > 1) {
+    state.presentation.currentPage--;
+    loadPresentationPage(state.presentation.currentPage - 1);
+  }
+};
+
+const nextPage = () => {
+  if (state.presentation.currentPage < state.presentation.totalPages) {
+    state.presentation.currentPage++;
+    loadPresentationPage(state.presentation.currentPage - 1);
+  }
+};
+
+function toggleSidebar() {
+  state.ui.sidebarVisible = !state.ui.sidebarVisible;
+
+  if (els.sidebar && els.mainContainer && els.toggleBtn) {
+    if (state.ui.sidebarVisible) {
+      els.sidebar.classList.remove('hidden');
+      els.mainContainer.classList.remove('sidebar-hidden');
+      els.toggleBtn.classList.remove('pulse');
+      els.toggleBtn.setAttribute('aria-expanded', 'true');
+    } else {
+      els.sidebar.classList.add('hidden');
+      els.mainContainer.classList.add('sidebar-hidden');
+      els.toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+}
+function addMediaFile(file, type) {
+  if (!file) return;
+
+  const validation = validateFile(file, type);
+  if (!validation.valid) {
+    showMessage(`Error: ${validation.error}`);
+    return;
+  }
+
+  try {
+    const mediaItem = {
+      id: Date.now(),
+      name: file.name,
+      type: type,
+      file: file,
+      url: URL.createObjectURL(file)
+    };
+
+    state.media.files.push(mediaItem);
+    updateMediaList();
+    showMessage(`${type === 'video' ? 'Video' : 'Audio'} agregado: ${file.name}`);
+  } catch (e) {
+    console.error('Error adding media file:', e);
+    showMessage('Error al agregar archivo multimedia');
+  }
+}
+
+function addWebLink() {
+  const url = prompt('Ingresa la URL del enlace web:');
+  
+  if (url && isValidUrl(url)) {
+    try {
+      const mediaItem = {
+        id: Date.now(),
+        name: extractDomainName(url),
+        type: 'web',
+        url: url
+      };
+
+      state.media.files.push(mediaItem);
+      updateMediaList();
+      showMessage(`Enlace web agregado: ${mediaItem.name}`);
+    } catch (e) {
+      console.error('Error adding web link:', e);
+      showMessage('Error al agregar enlace web');
+    }
+  } else if (url) {
+    showMessage('URL no válida');
+  }
+}
+
+const isValidUrl = string => {
+  try {
+    const url = new URL(string);
+    return ['http:', 'https:'].includes(url.protocol);
+  } catch (_) {
+    return false;
+  }
+};
+
+const extractDomainName = url => {
+  try {
+    return new URL(url).hostname.replace('www.', '');
+  } catch (_) {
+    return 'Enlace web';
+  }
+};
+
+const escapeHtml = text => text
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#x27;');
+
+function updateMediaList() {
+  if (!els.mediaList) return;
+
+  if (state.media.files.length === 0) {
+    els.mediaList.innerHTML = '<p style="color:var(--text-secondary);text-align:center;margin-top:40px">No hay archivos complementarios cargados</p>';
+    return;
+  }
+
+  els.mediaList.innerHTML = state.media.files.map(item => `
+    <div class="media-item" 
+         onclick="playMedia(${item.id})" 
+         role="listitem" 
+         tabindex="0"
+         aria-label="Reproducir ${getMediaTypeName(item.type)}: ${escapeHtml(item.name)}">
+      <div class="media-icon" aria-hidden="true">${getMediaIcon(item.type)}</div>
+      <span>${escapeHtml(item.name)}</span>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('.media-item').forEach(item => {
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        item.click();
+      }
+    });
+  });
+}
+
+const getMediaTypeName = type => {
+  switch (type) {
+    case 'video': return 'video';
+    case 'audio': return 'audio';
+    case 'web': return 'enlace web';
+    default: return 'archivo';
+  }
+};
+
+const getMediaIcon = type => {
+  switch (type) {
+    case 'video': return '🎥';
+    case 'audio': return '🎵';
+    case 'web': return '🌐';
+    default: return '📄';
+  }
+};
+
+function playMedia(mediaId) {
+  const media = state.media.files.find(m => m.id === mediaId);
+  if (!media) return;
+
+  let content = '';
+
+  try {
+    if (media.type === 'video') {
+      content = `
+        <video 
+          controls 
+          autoplay 
+          onended="closeMediaAuto()" 
+          onloadeddata="setCurrentMediaElement()"
+          aria-label="Reproductor de video: ${escapeHtml(media.name)}">
+          <source src="${media.url}" type="${media.file ? media.file.type : 'video/mp4'}">
+          Tu navegador no soporta video.
+        </video>
+      `;
+    } else if (media.type === 'audio') {
+      content = `
+        <audio 
+          controls 
+          autoplay 
+          onended="closeMediaAuto()" 
+          onloadeddata="setCurrentMediaElement()"
+          aria-label="Reproductor de audio: ${escapeHtml(media.name)}">
+          <source src="${media.url}" type="${media.file ? media.file.type : 'audio/mpeg'}">
+          Tu navegador no soporta audio.
+        </audio>
+      `;
+    } else if (media.type === 'web') {
+      content = `
+        <iframe 
+          src="${media.url}" 
+          width="1200" 
+          height="800"
+          title="Contenido web: ${escapeHtml(media.name)}"
+          aria-label="Visor de contenido web"></iframe>
+      `;
+    }
+
+    if (els.player) els.player.innerHTML = content;
+    if (els.overlay) els.overlay.classList.add('show');
+    
+    state.media.current = media;
+
+    setTimeout(() => {
+      state.media.currentElement = els.player.querySelector('video, audio');
+      const closeBtn = els.overlay.querySelector('.close-media');
+      if (closeBtn) closeBtn.focus();
+    }, 100);
+  } catch (e) {
+    console.error('Error playing media:', e);
+    showMessage('Error al reproducir medio');
+  }
+}
+
+function setCurrentMediaElement() {
+  if (els.player) {
+    state.media.currentElement = els.player.querySelector('video, audio');
+  }
+}
+
+const closeMedia = () => {
+  if (els.overlay) els.overlay.classList.remove('show');
+  if (els.player) els.player.innerHTML = '';
+  
+  state.media.current = null;
+  state.media.currentElement = null;
+};
+
+const closeMediaAuto = () => {
+  setTimeout(closeMedia, 500);
+};
+
+function toggleMediaPlayback() {
+  if (state.media.currentElement) {
+    try {
+      if (state.media.currentElement.paused) {
+        state.media.currentElement.play();
+        showMessage('Reproducción reanudada');
+      } else {
+        state.media.currentElement.pause();
+        showMessage('Reproducción pausada');
+      }
+    } catch (e) {
+      console.error('Playback toggle error:', e);
+    }
+  }
+}
+
+const showMessage = text => {
+  if (!els.statusMsg) return;
+
+  els.statusMsg.textContent = text;
+  els.statusMsg.classList.add('show');
+  
+  setTimeout(() => {
+    if (els.statusMsg) els.statusMsg.classList.remove('show');
+  }, 2000);
+};
+
+const hideMessage = () => {
+  if (els.statusMsg) els.statusMsg.classList.remove('show');
+};
+
+document.addEventListener('keydown', e => {
+  const key = e.key.toLowerCase();
+
+  if (e.ctrlKey && e.altKey && key === 't') {
+    e.preventDefault();
+    toggleTheme();
+  }
+  else if (key === 's' && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    toggleSidebar();
+  }
+  else if ((key === 'f' || key === 'f11') && !e.ctrlKey && !e.altKey) {
+    e.preventDefault();
+    toggleFullscreen();
+  }
+  else if (key === 'tab' && state.media.currentElement) {
+    e.preventDefault();
+    toggleMediaPlayback();
+  }
+  else if (key === 'escape') {
+    if (state.ui.isFullscreen) {
+      toggleFullscreen();
+    } else if (state.media.current) {
+      closeMedia();
+    }
+  }
+  else if (state.presentation.loaded && !state.media.current) {
+    if (key === 'arrowleft') {
+      e.preventDefault();
+      previousPage();
+    } else if (key === 'arrowright') {
+      e.preventDefault();
+      nextPage();
+    }
+  }
+});
+
+function setupTouchGestures() {
+  if (!els.presentationArea) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+
+  els.presentationArea.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
+    }
+  }, { passive: true });
+
+  els.presentationArea.addEventListener('touchend', e => {
+    if (e.changedTouches.length === 1) {
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = Math.abs(touch.clientY - touchStartY);
+      const duration = Date.now() - touchStartTime;
+
+      if (Math.abs(deltaX) > 80 && deltaY < 50 && duration < 300) {
+        if (deltaX > 0 && state.presentation.loaded) {
+          previousPage();
+        } else if (deltaX < 0 && state.presentation.loaded) {
+          nextPage();
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+setupTouchGestures();
+
+function cleanup() {
+  state.presentation.files.forEach(file => {
+    if (file.url) {
+      try {
+        URL.revokeObjectURL(file.url);
+      } catch (e) {
+        console.warn('Error revoking URL:', e);
+      }
+    }
+  });
+
+  state.media.files.forEach(media => {
+    if (media.url && media.file) {
+      try {
+        URL.revokeObjectURL(media.url);
+      } catch (e) {
+        console.warn('Error revoking URL:', e);
+      }
+    }
+  });
+
+  state.presentation.files = [];
+  state.media.files = [];
+  state.media.current = null;
+  state.media.currentElement = null;
+}
+
+window.addEventListener('beforeunload', cleanup);
+
+function initApp() {
+  const criticalElements = [
+    'uploadArea',
+    'frame',
+    'statusMsg',
+    'sidebar',
+    'mainContainer',
+    'presentationArea'
+  ];
+
+  criticalElements.forEach(key => {
+    if (!els[key]) {
+      console.warn(`Critical element missing: ${key}`);
+    }
+  });
+
+  if (els.toggleBtn) {
+    els.toggleBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  if (els.prevBtn) {
+    els.prevBtn.setAttribute('aria-disabled', 'true');
+  }
+
+  if (els.nextBtn) {
+    els.nextBtn.setAttribute('aria-disabled', 'true');
+  }
+
+  showMessage('Visor listo. Arrastra archivos o haz clic en el icono para comenzar');
+  hideMessage();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
+
+const debounce = (fn, ms = 100) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+};
+
+const throttle = (fn, ms = 100) => {
+  let lastRun = 0;
+  return (...args) => {
+    const now = Date.now();
+    if (now - lastRun >= ms) {
+      lastRun = now;
+      fn(...args);
+    }
+  };
+};
+
+function handleResponsive() {
+  const width = window.innerWidth;
+  
+  if (width <= 768) {
+    if (state.ui.sidebarVisible) {
+    }
+  }
+  else if (width <= 1024) {
+  }
+  else {
+  }
+}
+
+window.addEventListener('resize', throttle(handleResponsive, 150), { passive: true });
+handleResponsive();
+
+window.addEventListener('error', (event) => {
+  console.error('Global error caught:', event.error);
+  
+  if (event.message && !event.message.includes('Script error')) {
+    showMessage('Ha ocurrido un error. Por favor, recarga la página.');
+  }
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+  event.preventDefault();
+});
+
+function handleOrientationChange() {
+  if (!window.screen || !window.screen.orientation) return;
+
+  try {
+    window.screen.orientation.addEventListener('change', () => {
+      const orientation = window.screen.orientation.type;
+      
+      if (orientation.includes('landscape')) {
+        document.body.classList.add('landscape');
+        document.body.classList.remove('portrait');
+      } else {
+        document.body.classList.add('portrait');
+        document.body.classList.remove('landscape');
+      }
+      
+      handleResponsive();
+    });
+  } catch (e) {
+    console.warn('Orientation API error:', e);
+  }
+}
+
+handleOrientationChange();
+
+function setupMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+
+  try {
+    navigator.mediaSession.setActionHandler('play', () => {
+      if (state.media.currentElement && state.media.currentElement.paused) {
+        state.media.currentElement.play();
+      }
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      if (state.media.currentElement && !state.media.currentElement.paused) {
+        state.media.currentElement.pause();
+      }
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      if (state.presentation.loaded) previousPage();
+    });
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      if (state.presentation.loaded) nextPage();
+    });
+  } catch (e) {
+    console.warn('Media Session API error:', e);
+  }
+}
+
+setupMediaSession();
+
+function progressiveEnhancement() {
+  const features = {
+    fullscreen: document.fullscreenEnabled || 
+                document.webkitFullscreenEnabled || 
+                document.mozFullScreenEnabled ||
+                document.msFullscreenEnabled,
+    dragDrop: 'draggable' in document.createElement('div'),
+    fileAPI: 'FileReader' in window,
+    localStorage: (() => {
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    })(),
+    clipboard: 'clipboard' in navigator,
+    intersectionObserver: 'IntersectionObserver' in window,
+    webGL: (() => {
+      try {
+        const canvas = document.createElement('canvas');
+        return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+      } catch (e) {
+        return false;
+      }
+    })()
+  };
+
+  if (!features.fullscreen && els.fullscreenIcon) {
+    const fullscreenBtn = document.querySelector('.fullscreen-btn');
+    if (fullscreenBtn) {
+      fullscreenBtn.style.display = 'none';
+    }
+  }
+
+  if (!features.dragDrop || !features.fileAPI) {
+    if (els.uploadArea) {
+      els.uploadArea.removeEventListener('dragover', handlers.dragOver);
+      els.uploadArea.removeEventListener('dragleave', handlers.dragLeave);
+      els.uploadArea.removeEventListener('drop', handlers.drop);
+    }
+  }
+
+  if (!features.localStorage) {
+    showMessage('Almacenamiento local no disponible. Las preferencias no se guardarán.');
+  }
+
+  return features;
+}
+
+const supportedFeatures = progressiveEnhancement();
+
+let idleTimer = null;
+let isIdle = false;
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  
+  if (isIdle) {
+    isIdle = false;
+    document.body.classList.remove('user-idle');
+  }
+
+  idleTimer = setTimeout(() => {
+    isIdle = true;
+    document.body.classList.add('user-idle');
+  }, 300000);
+}
+
+['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+  document.addEventListener(event, debounce(resetIdleTimer, 1000), { passive: true });
+});
+
+resetIdleTimer();
+
+async function handleBatteryStatus() {
+  if (!('getBattery' in navigator)) return;
+
+  try {
+    const battery = await navigator.getBattery();
+    
+    const updateBatteryStatus = () => {
+      if (battery.level < 0.2 && !battery.charging) {
+        document.body.classList.add('low-battery');
+      } else {
+        document.body.classList.remove('low-battery');
+      }
+    };
+
+    battery.addEventListener('levelchange', updateBatteryStatus);
+    battery.addEventListener('chargingchange', updateBatteryStatus);
+    
+    updateBatteryStatus();
+  } catch (e) {
+    console.warn('Battery API error:', e);
+  }
+}
+
+handleBatteryStatus();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+  } else {
+  }
+});
+
+function handleOnlineStatus() {
+  window.addEventListener('online', () => {
+    showMessage('Conexión restaurada');
+  });
+
+  window.addEventListener('offline', () => {
+    showMessage('Sin conexión a internet');
+  });
+}
+
+handleOnlineStatus();
+
+if ('ontouchstart' in window) {
+  document.addEventListener('touchstart', (e) => {
+    if (e.target.matches('button, .control-btn, .ghost-btn, .add-btn')) {
+      if ('vibrate' in navigator) {
+        try {
+          navigator.vibrate(10);
+        } catch (e) {
+          console.warn('Haptic feedback error:', e);
+        }
+      }
+    }
+  }, { passive: true });
+}
+function safeLocalStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (e) {
+    console.error('localStorage set error:', e);
+    if (e.name === 'QuotaExceededError') {
+      showMessage('Almacenamiento lleno. Limpia datos antiguos.');
+    }
+    return false;
+  }
+}
+
+function safeLocalStorageGet(key, defaultValue = null) {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (e) {
+    console.error('localStorage get error:', e);
+    return defaultValue;
+  }
+}
+
+function safeLocalStorageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (e) {
+    console.error('localStorage remove error:', e);
+    return false;
+  }
+}
+
+function saveState() {
+  const stateToSave = {
+    currentPage: state.presentation.currentPage,
+    totalPages: state.presentation.totalPages,
+    presentationLoaded: state.presentation.loaded,
+    sidebarVisible: state.ui.sidebarVisible,
+    timestamp: Date.now()
+  };
+
+  safeLocalStorageSet('vp_light_state', stateToSave);
+}
+
+function restoreState() {
+  const savedState = safeLocalStorageGet('vp_light_state');
+  
+  if (!savedState) return;
+
+  const oneHour = 60 * 60 * 1000;
+  if (Date.now() - savedState.timestamp > oneHour) {
+    safeLocalStorageRemove('vp_light_state');
+    return;
+  }
+
+  if (savedState.sidebarVisible && els.sidebar && els.mainContainer) {
+    state.ui.sidebarVisible = true;
+    els.sidebar.classList.remove('hidden');
+    els.mainContainer.classList.remove('sidebar-hidden');
+    if (els.toggleBtn) {
+      els.toggleBtn.classList.remove('pulse');
+      els.toggleBtn.setAttribute('aria-expanded', 'true');
+    }
+  }
+}
+
+setInterval(() => {
+  if (state.presentation.loaded) {
+    saveState();
+  }
+}, 30000);
+
+restoreState();
+
+setTimeout(() => {
+  document.body.classList.add('app-ready');
+}, 500);
+
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  window.AIDN_DEBUG = {
+    state,
+    els,
+    toggleTheme,
+    showMessage,
+    validateFile,
+    supportedFeatures
+  };
+}
+</script>
+</body>
+</html>
