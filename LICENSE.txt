@@ -1,0 +1,374 @@
+LICENCIA PROPIETARIA
+
+Copyright © 2026 AIDN & Saúl Dávila Pantoja
+Todos los derechos reservados.
+
+================================================================================
+
+TÉRMINOS Y CONDICIONES DE USO
+
+Este software, código fuente, diseño, branding, contenido y todos los activos 
+asociados (en adelante "el Proyecto VP.Light") son propiedad exclusiva de:
+
+- AIDN (marca corporativa registrada)
+- Saúl Dávila Pantoja (desarrollador y autor)
+
+================================================================================
+
+ELEMENTOS PROTEGIDOS
+
+1. MARCA CORPORATIVA AIDN
+   - Logo AIDN (hexágono con gradiente azul)
+   - Paleta de colores corporativa (#0c2a85, #03b4d6)
+   - Sistema de branding y tipografía
+   - Tagline corporativo: "Catapultando empresas para liderar el cambio"
+   - Naming "VP.Light" y "AIDN Viewer"
+
+2. PROPIEDAD INTELECTUAL DEL SOFTWARE
+   - Arquitectura de software single-file
+   - Sistema de navegación de presentaciones
+   - Implementación de glassmorphism y efectos visuales
+   - Sistema de medios complementarios
+   - Lógica de detección de gestos táctiles
+   - Sistema de validación de archivos
+   - Implementación de controles fullscreen
+   - Gestión de estado y caché de elementos DOM
+   - Sistema de feedback multisensorial
+   - Estructura HTML/CSS/JavaScript completa
+
+3. DISEÑO Y EXPERIENCIA DE USUARIO
+   - Interfaz de usuario y layout
+   - Sistema de micro-interacciones (15+)
+   - Diseño responsive mobile-first
+   - Sistema de temas (claro/oscuro)
+   - Iconografía y elementos visuales
+   - Paleta de colores y gradientes
+   - Tipografía y jerarquías visuales
+   - Animaciones y transiciones
+
+================================================================================
+
+RESTRICCIONES - USOS PROHIBIDOS
+
+Queda ESTRICTAMENTE PROHIBIDO sin autorización escrita explícita:
+
+1. USO COMERCIAL del código, diseño o elementos visuales
+2. CLONAR, BIFURCAR (fork) o REDISTRIBUIR con fines comerciales
+3. USO DE MARCA AIDN o "VP.Light" en proyectos propios o derivados
+4. MODIFICACIÓN Y REDISTRIBUCIÓN del código con marca
+5. CREACIÓN DE TRABAJOS DERIVADOS con propósitos comerciales
+6. USO DE ELEMENTOS DE DISEÑO en plantillas comerciales
+7. VENTA, LICENCIAMIENTO o SUBLICENCIAMIENTO del proyecto
+8. ELIMINACIÓN O ALTERACIÓN de avisos de copyright
+9. INTEGRACIÓN EN PRODUCTOS COMERCIALES sin licencia
+10. REVERSE ENGINEERING para crear productos competidores
+
+================================================================================
+
+USOS PERMITIDOS
+
+Se permite ÚNICAMENTE con atribución adecuada:
+
+1. VISUALIZACIÓN del código fuente para fines educativos
+2. REFERENCIAS TÉCNICAS en artículos, tutoriales o blogs (con crédito)
+3. INSPIRACIÓN CONCEPTUAL (sin copia directa del código)
+4. FORK PRIVADO para estudio personal (no publicación comercial)
+5. SCREENSHOTS con marca visible para fines educativos
+
+REQUISITOS DE ATRIBUCIÓN:
+- Mencionar claramente: "Basado en VP.Light por Saúl Dávila Pantoja"
+- Incluir link al repositorio original: https://github.com/maesauldavila/VP.Light
+- Incluir este aviso de copyright
+- Declarar explícitamente: "Código original bajo licencia propietaria"
+
+================================================================================
+
+VALORACIÓN COMERCIAL
+
+Este proyecto representa:
+- 120-150 horas de desarrollo senior full-stack
+- Valor de mercado: $8,500 - $11,000 USD
+- Nivel boutique agency
+- Código production-ready con documentación completa
+
+================================================================================
+
+LICENCIAS COMERCIALES
+
+Para uso comercial, se requiere licencia pagada:
+
+PRECIOS DE REFERENCIA:
+- Uso individual/startup: $500 - $1,500 USD
+- Uso corporativo/empresa mediana: $2,000 - $5,000 USD
+- White label completo: $10,000+ USD
+- Licencia de plantilla comercial: $15,000+ USD
+
+Los precios finales se determinan mediante negociación según:
+- Tamaño de la organización
+- Alcance del uso (interno vs. público)
+- Modificaciones requeridas
+- Soporte y mantenimiento incluido
+
+Contactar para negociación: sauldavila@gmail.com
+
+================================================================================
+
+PROTECCIÓN LEGAL
+
+Este proyecto está protegido bajo:
+
+1. Ley Federal del Derecho de Autor (México)
+   - Registro en trámite ante INDAUTOR
+   
+2. Digital Millennium Copyright Act (DMCA)
+   - Aplicable a infracciones en plataformas digitales
+   
+3. Propiedad intelectual corporativa de AIDN
+   - Marca registrada (en proceso)
+   
+4. Derechos de autor internacionales (Convenio de Berna)
+   - Protección automática en 179 países
+
+VIOLACIONES:
+- Cualquier uso no autorizado será reportado bajo DMCA Takedown Notice
+- Se tomarán acciones legales según la gravedad de la infracción
+- Los infractores son responsables de daños, perjuicios y costos legales
+- Posibles sanciones: multas, eliminación de contenido, demandas civiles
+
+PROCEDIMIENTO DE DMCA:
+1. Detección de uso no autorizado
+2. Notificación al infractor (período de gracia 7 días)
+3. DMCA Takedown Notice a plataforma de hosting
+4. Evaluación de acciones legales adicionales
+
+================================================================================
+
+DESCARGO DE RESPONSABILIDAD (DISCLAIMER)
+
+EL PROYECTO SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, 
+EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A GARANTÍAS DE 
+COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN.
+
+EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES 
+DE CUALQUIER RECLAMO, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN 
+DE CONTRATO, AGRAVIO O DE OTRO MODO, QUE SURJA DE, FUERA DE O EN CONEXIÓN 
+CON EL SOFTWARE O EL USO U OTROS TRATOS EN EL SOFTWARE.
+
+LIMITACIONES ESPECÍFICAS:
+- No se garantiza compatibilidad con navegadores obsoletos
+- No se garantiza funcionamiento en todos los dispositivos
+- Los archivos cargados son procesados localmente (sin backup)
+- Pérdida de datos por cierre accidental del navegador
+- Comportamiento impredecible con archivos muy grandes (>100MB)
+
+RECOMENDACIONES:
+- Siempre mantener copias de seguridad de archivos importantes
+- Probar compatibilidad antes de presentaciones críticas
+- Usar navegadores modernos y actualizados
+- Verificar funcionamiento en el dispositivo de presentación
+
+================================================================================
+
+SOPORTE Y MANTENIMIENTO
+
+POLÍTICA DE SOPORTE:
+- **Versión gratuita**: Sin soporte oficial
+- **Reportar bugs**: Vía email (sauldavila@gmail.com)
+- **Feature requests**: Considerados para versiones futuras
+- **Licencias comerciales**: Soporte prioritario incluido
+
+ACTUALIZACIONES:
+- Las mejoras se implementan a discreción del desarrollador
+- No se garantiza retrocompatibilidad entre versiones
+- Los licenciatarios comerciales reciben notificaciones de updates
+
+COMUNIDAD:
+- Este es un proyecto cerrado sin comunidad pública
+- No hay foro de discusión oficial
+- Issues de GitHub están deshabilitados
+
+================================================================================
+
+JURISDICCIÓN
+
+Esta licencia se rige por las leyes de los Estados Unidos Mexicanos.
+
+Cualquier disputa, controversia o reclamación derivada de esta licencia será 
+resuelta mediante:
+
+1. PRIMERA INSTANCIA: Mediación voluntaria
+2. SEGUNDA INSTANCIA: Arbitraje según la Ley de Arbitraje Comercial
+3. TERCERA INSTANCIA: Tribunales competentes de Monterrey, Nuevo León, México
+
+ELECCIÓN DE JURISDICCIÓN:
+- Jurisdicción primaria: Monterrey, Nuevo León, México
+- El uso del software implica aceptación de esta jurisdicción
+- Renuncia expresa a cualquier otra jurisdicción
+
+IDIOMA:
+- Esta licencia está redactada en español
+- En caso de conflicto con traducciones, prevalece la versión en español
+
+================================================================================
+
+CONTACTO
+
+Para solicitar permisos, licencias comerciales o reportar infracciones:
+
+DESARROLLADOR Y AUTOR:
+Saúl Dávila Pantoja
+- Email: sauldavila@gmail.com
+- WhatsApp: +52 1 55 3719 1248
+- Web: https://maesauldavila.github.io/tarjeta-digital/
+
+MARCA CORPORATIVA AIDN:
+- Representante Autorizado: Saúl Dávila Pantoja
+- Email corporativo: info@aidn.com.mx (pendiente activación)
+
+REPORTAR INFRACCIONES:
+- Email: sauldavila@gmail.com
+- Asunto: "Reporte DMCA - VP.Light"
+- Incluir: URL del uso indebido, evidencia, tu información de contacto
+
+SOLICITAR LICENCIAS:
+- Email: sauldavila@gmail.com
+- Asunto: "Solicitud Licencia Comercial - VP.Light"
+- Incluir: Tipo de uso, tamaño de organización, alcance del proyecto
+
+TIEMPO DE RESPUESTA:
+- Consultas generales: 3-5 días hábiles
+- Solicitudes de licencia: 5-7 días hábiles
+- Reportes DMCA: 24-48 horas
+
+================================================================================
+
+ACEPTACIÓN DE TÉRMINOS
+
+EL USO, DESCARGA, VISUALIZACIÓN O ACCESO A ESTE SOFTWARE CONSTITUYE 
+ACEPTACIÓN AUTOMÁTICA Y VINCULANTE DE TODOS LOS TÉRMINOS Y CONDICIONES 
+DE ESTA LICENCIA.
+
+Si no estás de acuerdo con estos términos:
+- NO uses, descargues, copies o modifiques el software
+- NO visualices el código fuente con intención de uso
+- Elimina cualquier copia local del software
+
+La ignorancia de estos términos NO exime de su cumplimiento.
+
+================================================================================
+
+MODIFICACIONES A LA LICENCIA
+
+Los titulares se reservan el derecho de modificar estos términos en cualquier 
+momento sin previo aviso.
+
+NOTIFICACIÓN DE CAMBIOS:
+- Actualizaciones mayores: Notificación en repositorio GitHub
+- Licenciatarios comerciales: Notificación directa por email
+- Fecha efectiva: Indicada al inicio del documento
+
+VERSIONES:
+- Versión actual: 1.0.0
+- Fecha de emisión: Enero 2026
+- Última revisión: Enero 2026
+
+El uso continuado del proyecto después de cambios constituye aceptación 
+de los nuevos términos.
+
+HISTORIAL DE VERSIONES:
+- v1.0.0 (Enero 2026): Emisión inicial de la licencia
+
+================================================================================
+
+SEPARABILIDAD
+
+Si alguna disposición de esta licencia se considera inválida o inaplicable, 
+las disposiciones restantes permanecerán en pleno vigor y efecto.
+
+La invalidez de una cláusula no afecta la validez del resto del acuerdo.
+
+================================================================================
+
+RENUNCIA Y NO EXENCIÓN DE DERECHOS
+
+La falta de ejercicio de cualquier derecho bajo esta licencia no constituye 
+una renuncia a dicho derecho.
+
+El retraso en hacer valer cualquier disposición no constituye consentimiento 
+para su violación continuada.
+
+================================================================================
+
+CESIÓN
+
+Esta licencia NO puede ser cedida, transferida o sublicenciada por el usuario 
+sin consentimiento previo y por escrito de los titulares.
+
+Los titulares pueden ceder o transferir sus derechos en cualquier momento.
+
+================================================================================
+
+LICENCIA COMPLETA
+
+Esta licencia constituye el acuerdo completo entre las partes con respecto 
+al software y reemplaza todos los acuerdos anteriores, escritos u orales.
+
+No existen garantías, representaciones o acuerdos fuera de este documento.
+
+================================================================================
+
+AGRADECIMIENTOS
+
+Este proyecto no utiliza código de terceros bajo licencias open source.
+Es 100% código original desarrollado desde cero.
+
+INSPIRACIÓN (sin uso de código):
+- PDF.js (Mozilla) - concepto de visor de documentos
+- Reveal.js - concepto de presentaciones web
+- Google Material Design - principios de diseño
+
+================================================================================
+
+VERSIONES FUTURAS
+
+ROADMAP PLANIFICADO:
+- Modo presentador con notas
+- Integración con servicios cloud
+- Exportación a PDF
+- Modo colaborativo
+
+Las versiones futuras pueden tener términos de licencia diferentes.
+Cada versión se rige por la licencia vigente al momento de su publicación.
+
+================================================================================
+
+DATOS DE REGISTRO
+
+PROYECTO: VP.Light (AIDN Viewer)
+AUTOR: Saúl Dávila Pantoja
+TITULAR MARCA: AIDN
+TIPO: Software propietario - Visualizador de presentaciones
+VERSIÓN: 1.0.0
+FECHA EMISIÓN: Enero 2026
+REPOSITORIO: https://github.com/maesauldavila/VP.Light
+DEMO VIVO: https://maesauldavila.github.io/VP.Light/
+
+REGISTRO INDAUTOR: [En trámite]
+REGISTRO MARCA AIDN: [En proceso]
+
+================================================================================
+
+DECLARACIÓN FINAL
+
+Este software representa el trabajo, creatividad y esfuerzo de su autor.
+El respeto a la propiedad intelectual beneficia a toda la comunidad de 
+desarrollo y fomenta la innovación continua.
+
+Gracias por respetar estos términos.
+
+================================================================================
+
+Copyright © 2026 AIDN & Saúl Dávila Pantoja
+Todos los derechos reservados.
+
+FIN DE LA LICENCIA
