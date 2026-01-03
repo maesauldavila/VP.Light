@@ -7,7 +7,7 @@
 > Visualizador profesional de presentaciones con medios complementarios integrados y experiencia de usuario premium.
 
 🔗 **Demo en vivo:** [maesauldavila.github.io/VP.Light](https://maesauldavila.github.io/VP.Light/)  
-🔗 **Shortlink:** [bit.ly/VP-Light](https://bit.ly/VP-Light)
+🔗 **Shortlink:** [bit.ly/vp-light](https://bit.ly/vp-light)
 
 ---
 
